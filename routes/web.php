@@ -20,7 +20,12 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     return redirect()->to(\route('public.index', ['lang' => 'eng']));
-});;
+});
+
+Route::get('test/{name}', function ($name){
+    event(new \App\Events\TestEvent('This is for testing'));
+    return $name;
+});
 
 Route::group(['prefix'=>'{lang}'], function(){
     Route::match(['POST','GET'], 'change/password', [\App\Http\Controllers\UserManagement\UserController::class, 'change_password'])->name('change.password')->middleware(['auth']);
@@ -29,9 +34,8 @@ Route::group(['prefix'=>'{lang}'], function(){
 
         /***************************** After login routes ************************/
         Route::middleware(['auth', 'check_user' ])->group(function (){
-            Route::get('/dashboard', function () {
-                return Inertia::render('Dashboard');
-            })->name('dashboard');
+            Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+            Route::get('fire/test/event', [\App\Http\Controllers\DashboardController::class, 'testEvent'])->name('first.test.event');
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::get('/test', [\App\Http\Controllers\TestController::class, 'test'])->name('test');
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
