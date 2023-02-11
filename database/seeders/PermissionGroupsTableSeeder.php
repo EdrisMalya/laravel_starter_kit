@@ -24,9 +24,9 @@ class PermissionGroupsTableSeeder extends Seeder
                 'id' => 1,
                 'permission_group_id' => 0,
                 'name' => 'User management',
-                'sort' => 2,
+                'sort' => 0,
                 'created_at' => '2022-12-11 06:04:50',
-                'updated_at' => '2023-02-11 14:45:35',
+                'updated_at' => '2023-02-12 01:43:47',
             ),
             1 => 
             array (
@@ -51,9 +51,9 @@ class PermissionGroupsTableSeeder extends Seeder
                 'id' => 4,
                 'permission_group_id' => 0,
                 'name' => 'Configuration',
-                'sort' => 0,
+                'sort' => 1,
                 'created_at' => '2022-12-11 10:24:12',
-                'updated_at' => '2023-02-11 12:50:26',
+                'updated_at' => '2023-02-12 01:41:11',
             ),
             4 => 
             array (
@@ -156,12 +156,12 @@ class PermissionGroupsTableSeeder extends Seeder
             ),
             15 => 
             array (
-                'id' => 47,
+                'id' => 52,
                 'permission_group_id' => 0,
-                'name' => 'Product',
-                'sort' => 1,
-                'created_at' => '2023-02-11 14:45:08',
-                'updated_at' => '2023-02-11 14:45:35',
+                'name' => 'Contact',
+                'sort' => 2,
+                'created_at' => '2023-02-12 01:39:58',
+                'updated_at' => '2023-02-12 01:43:47',
             ),
         ));
         

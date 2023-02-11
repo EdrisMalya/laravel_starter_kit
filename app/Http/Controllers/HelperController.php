@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Language;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use TPDF;
 
 class HelperController extends Controller
@@ -131,9 +133,22 @@ class HelperController extends Controller
         return response()->noContent();
     }
 
-    public static function removeFile($file){
-        if(File::exists(public_path('storage/'.$file))){
-            File::delete(public_path('storage/'.$file));
+    public static function removeFile($file, $type='normal'){
+        switch ($type){
+            case 'url':
+                $array = explode('/', $file);
+                $file_name = end($array);
+                $file_directory = $array[count($array) - 2];
+                $new_array = [$file_directory,$file_name];
+                $file_full_path = implode('/',$new_array);
+                if(File::exists(public_path('storage/'.$file_full_path))){
+                    File::delete(public_path('storage/'.$file_full_path));
+                }
+                break;
+            default:
+                if(File::exists(public_path('storage/'.$file))){
+                    File::delete(public_path('storage/'.$file));
+                }
         }
     }
 }

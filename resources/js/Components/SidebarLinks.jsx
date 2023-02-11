@@ -28,15 +28,9 @@ const SidebarLinks = ({ active }) => {
                     active={active === 'user_management'}
                 />
             </ProtectedComponent>
-            <ProtectedComponent role={'user-management-access'}>
-                <SidebarLinkButton
-                    dir={dir}
-                    icon={<ViewColumn className={'h-5'} />}
-                    url={route('user-management.index', { lang })}
-                    label={translate('Products')}
-                    active={active === 'products'}
-                />
-            </ProtectedComponent>
+
+            {/*Other links*/}
+
             <ProtectedComponent role={'configuration-access'}>
                 <SidebarLinkButton
                     dir={dir}

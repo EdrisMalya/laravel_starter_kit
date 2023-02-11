@@ -41,8 +41,7 @@ Route::group(['prefix'=>'{lang}'], function(){
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
             Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-            /**************************************** Product Controller ********************************/
-            Route::resource('product', \App\Http\Controllers\ProductController::class);
+            /**** Other routes ****/
 
             /*************************************** User management routes ****************************************/
             Route::group(['prefix' => 'user/management'], function (){
