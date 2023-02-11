@@ -133,6 +133,18 @@ class MigrationsTableSeeder extends Seeder
                 'migration' => '2022_12_29_092027_create_widgets_table',
                 'batch' => 9,
             ),
+            19 => 
+            array (
+                'id' => 20,
+                'migration' => '0000_00_00_000000_create_websockets_statistics_entries_table',
+                'batch' => 1,
+            ),
+            20 => 
+            array (
+                'id' => 21,
+                'migration' => '2023_02_11_144150_create_products_table',
+                'batch' => 10,
+            ),
         ));
         
         

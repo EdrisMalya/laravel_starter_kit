@@ -5,7 +5,7 @@ import { HomeIcon } from '@heroicons/react/24/solid'
 import ProtectedComponent from '@/Components/ProtectedComponent'
 import { usePage } from '@inertiajs/inertia-react'
 import useLanguage from '@/hooks/useLanguage'
-import ArticleIcon from '@mui/icons-material/Article';
+import { ViewColumn } from '@mui/icons-material'
 
 const SidebarLinks = ({ active }) => {
     const { lang, dir } = usePage().props
@@ -26,6 +26,15 @@ const SidebarLinks = ({ active }) => {
                     url={route('user-management.index', { lang })}
                     label={translate('User management')}
                     active={active === 'user_management'}
+                />
+            </ProtectedComponent>
+            <ProtectedComponent role={'user-management-access'}>
+                <SidebarLinkButton
+                    dir={dir}
+                    icon={<ViewColumn className={'h-5'} />}
+                    url={route('user-management.index', { lang })}
+                    label={translate('Products')}
+                    active={active === 'products'}
                 />
             </ProtectedComponent>
             <ProtectedComponent role={'configuration-access'}>

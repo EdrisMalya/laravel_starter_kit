@@ -57,6 +57,7 @@ class RoleController extends Controller
                 ->where('permission_group_id', 0)
                 ->with('permissionGroup.permissions')
                 ->with('permissions')
+                ->orderBy('sort')
                 ->get(),
             'role' => $role->load(['created_by', 'updated_by']),
             'assigned_permissions' => RolePermission::query()

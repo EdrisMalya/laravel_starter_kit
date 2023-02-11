@@ -27,6 +27,7 @@ class PermissionsController extends Controller
                 ->where('permission_group_id', 0)
                 ->with('permissionGroup.permissions')
                 ->with('permissions')
+                ->orderBy('sort')
                 ->get()
         ]);
     }
@@ -43,6 +44,13 @@ class PermissionsController extends Controller
             }],
             'permission_group_id' => 'sometimes',
         ]);
+        $max_sort = PermissionGroup::query()->where('permission_group_id', $data['permission_group_id'])->max('sort');
+        if(PermissionGroup::query()->where('permission_group_id', $data['permission_group_id'])->count() > 0){
+            $max_sort = $max_sort+1;
+        }else{
+            $max_sort = $max_sort > 0 ? $max_sort+1:$max_sort;
+        }
+        $data['sort'] = $max_sort == null?0:$max_sort;
         PermissionGroup::create($data);
         return back()->with(['message'=>translate('Group created successfully'), 'type'=>'success']);
     }
@@ -91,5 +99,46 @@ class PermissionsController extends Controller
             $permission->delete();
             return back()->with(['message'=>translate('Permission created successfully'), 'type' => 'success']);
         }
+    }
+    public function updatePermissionSort($lang, Request $request){
+        /*dd([
+            'parent' => (int)$request->get('parent_id'),
+            'removedIndex' => (int)$request->get('removedIndex'),
+            'addedIndex' => (int)$request->get('addedIndex'),
+
+        ]);*/
+        /*dd(PermissionGroup::query()
+            ->where('permission_group_id', (int)$request->get('parent_id'))
+            ->where('sort', (int)$request->get('addedIndex'))->get());*/
+        /*dd([
+            'first' =>  PermissionGroup::query()
+                ->where('permission_group_id', $request->get('parent_id'))
+                ->where('sort', (int)$request->get('removedIndex'))->first(),
+            'second' => PermissionGroup::query()
+                ->where('permission_group_id', $request->get('parent_id'))
+                ->where('sort', (int)$request->get('addedIndex'))->first(),
+            'parent' => (int)$request->get('parent_id'),
+            'removedIndex' => (int)$request->get('removedIndex'),
+            'addedIndex' => (int)$request->get('addedIndex'),
+        ]);*/
+        /*dd(PermissionGroup::query()
+            ->where('permission_group_id', $request->get('parent_id'))
+            ->where('sort', (int)$request->get('addedIndex'))->first());*/
+        $first = PermissionGroup::query()
+            ->where('permission_group_id', $request->get('parent_id'))
+            ->where('sort', (int)$request->get('addedIndex'))
+            ->first();
+        $second = PermissionGroup::query()
+            ->where('permission_group_id', $request->get('parent_id'))
+            ->where('sort', (int)$request->get('removedIndex'))
+            ->first();
+        $first->update([
+            'sort' => (int)$request->get('removedIndex')
+        ]);
+        $second->update([
+            'sort' => (int)$request->get('addedIndex')
+        ]);
+
+        return back()->with(['message' => translate('Sort updated'), 'type' => 'success']);
     }
 }

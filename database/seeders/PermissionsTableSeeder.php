@@ -343,6 +343,42 @@ class PermissionsTableSeeder extends Seeder
                 'created_at' => '2022-12-29 12:49:56',
                 'updated_at' => '2022-12-29 12:49:56',
             ),
+            36 => 
+            array (
+                'id' => 46,
+                'permission_group_id' => 47,
+                'name' => 'Access',
+                'key' => 'product-access',
+                'created_at' => '2023-02-11 14:45:14',
+                'updated_at' => '2023-02-11 14:45:14',
+            ),
+            37 => 
+            array (
+                'id' => 47,
+                'permission_group_id' => 47,
+                'name' => 'Create product',
+                'key' => 'product-create-product',
+                'created_at' => '2023-02-11 14:45:20',
+                'updated_at' => '2023-02-11 14:45:20',
+            ),
+            38 => 
+            array (
+                'id' => 48,
+                'permission_group_id' => 47,
+                'name' => 'Edit product',
+                'key' => 'product-edit-product',
+                'created_at' => '2023-02-11 14:45:24',
+                'updated_at' => '2023-02-11 14:45:24',
+            ),
+            39 => 
+            array (
+                'id' => 49,
+                'permission_group_id' => 47,
+                'name' => 'Delete project',
+                'key' => 'product-delete-project',
+                'created_at' => '2023-02-11 14:45:29',
+                'updated_at' => '2023-02-11 14:45:29',
+            ),
         ));
         
         

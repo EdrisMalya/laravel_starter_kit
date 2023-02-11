@@ -11,6 +11,8 @@ import PermissionGroups from '@/Pages/UserManagement/Permissions/PermissionGroup
 import PermissionForm from '@/Pages/UserManagement/Permissions/PermissionForm'
 import UserManagementLinks from '@/Pages/UserManagement/UserManagementLinks'
 import useLanguage from '@/hooks/useLanguage'
+import { Container, Draggable } from 'react-smooth-dnd'
+import { Inertia } from '@inertiajs/inertia'
 
 const PermissionIndex = ({ auth, active, permissions, lang }) => {
     const [groupForm, setGroupForm] = React.useState(false)
@@ -42,6 +44,7 @@ const PermissionIndex = ({ auth, active, permissions, lang }) => {
                         onError: () => {
                             setPageLoading[1](false)
                         },
+                        preserveScroll: true,
                     },
                 )
             }
@@ -82,6 +85,24 @@ const PermissionIndex = ({ auth, active, permissions, lang }) => {
         })
     }
 
+    const opDrag = props => {
+        Inertia.post(
+            route('update.permission.sort', {
+                lang,
+                parent_id: 0,
+                removedIndex: props.removedIndex,
+                addedIndex: props.addedIndex,
+            }),
+            {},
+            {
+                onSuccess: () => {
+                    setPageLoading[1](false)
+                },
+                preserveScroll: true,
+            },
+        )
+    }
+
     return (
         <Authenticated
             auth={auth}
@@ -102,9 +123,14 @@ const PermissionIndex = ({ auth, active, permissions, lang }) => {
             </div>
             <div className={'mt-8'}>
                 {permissions?.length > 0 ? (
-                    <div>
+                    <Container onDrop={opDrag}>
                         {permissions?.map((item, index) => (
                             <PermissionGroups
+                                Container={Container}
+                                Draggable={Draggable}
+                                opDrag={opDrag}
+                                lang={lang}
+                                setPageLoading={setPageLoading}
                                 permissions={item?.permissions}
                                 key={index}
                                 setGroupForm={setGroupForm}
@@ -119,7 +145,7 @@ const PermissionIndex = ({ auth, active, permissions, lang }) => {
                                 deletePermission={deletePermission}
                             />
                         ))}
-                    </div>
+                    </Container>
                 ) : (
                     <p className={'text-center text-red-500 mt-12'}>
                         No record found

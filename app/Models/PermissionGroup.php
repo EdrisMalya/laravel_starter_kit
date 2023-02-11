@@ -27,7 +27,7 @@ class PermissionGroup extends Model
 
     public function permissionGroup()
     {
-        return $this->hasMany(PermissionGroup::class)->with('permissionGroup.permissions');
+        return $this->hasMany(PermissionGroup::class)->with('permissionGroup.permissions')->orderBy('sort');
     }
 
     public function permissions()

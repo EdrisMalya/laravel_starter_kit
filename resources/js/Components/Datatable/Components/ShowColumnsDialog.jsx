@@ -22,9 +22,6 @@ function SimpleDialog(props) {
 
     const handleClose = () => {
         onClose(selectedValue)
-        if (typeof props.onIgnoreColumnChanged !== 'undefined') {
-            props.onIgnoreColumnChanged(props.data.ignore_columns)
-        }
     }
 
     const columns = props.columns
@@ -111,7 +108,6 @@ export default function ShowColumnsDialog({
     dispatch,
     actions,
     showNumber,
-    onIgnoreColumnChanged,
 }) {
     const [open, setOpen] = React.useState(false)
     const [selectedValue, setSelectedValue] = React.useState(emails[1])
@@ -145,7 +141,6 @@ export default function ShowColumnsDialog({
                 actions={actions}
                 showNumber={showNumber}
                 direction={direction}
-                onIgnoreColumnChanged={onIgnoreColumnChanged}
             />
         </div>
     )

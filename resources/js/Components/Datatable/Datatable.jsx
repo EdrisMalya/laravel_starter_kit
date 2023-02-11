@@ -31,8 +31,7 @@ const Datatable = ({
     objectName = null,
     deleteRoute,
     datatableFilters = [],
-    onIgnoreColumnChanged,
-    returnColumns,
+    fromResource = false,
 }) => {
     const [data, dispatch] = useReducer(DatatableReducer, DATA_TABLE_INIT_VALUE)
     const [totalPage, setTotalPage] = useState(0)
@@ -70,20 +69,27 @@ const Datatable = ({
                 direction,
             },
         })
-        if (typeof returnColumns !== 'undefined') {
-            returnColumns(columns)
-        }
     }, [])
 
     useEffect(() => {
         if (tableData) {
-            let p_number = tableData.total / tableData.per_page
-            setTotalPage(
-                tableData.total / tableData.per_page >
-                    parseInt(tableData.total / tableData.per_page)
-                    ? parseInt(p_number) + 1
-                    : parseInt(p_number),
-            )
+            if (fromResource) {
+                let p_number = tableData.meta.total / tableData.meta.per_page
+                setTotalPage(
+                    tableData.meta.total / tableData.meta.per_page >
+                        parseInt(tableData.meta.total / tableData.meta.per_page)
+                        ? parseInt(p_number) + 1
+                        : parseInt(p_number),
+                )
+            } else {
+                let p_number = tableData.total / tableData.per_page
+                setTotalPage(
+                    tableData.total / tableData.per_page >
+                        parseInt(tableData.total / tableData.per_page)
+                        ? parseInt(p_number) + 1
+                        : parseInt(p_number),
+                )
+            }
         }
     }, [tableData])
 
@@ -102,84 +108,90 @@ const Datatable = ({
                 datatableRoute={datatableRoute}
                 translate={translate}
             />
-            <div className={'mt-5'}>
-                <DatatableActions
-                    translate={translate}
-                    columns={columns}
-                    data={data}
-                    dispatch={dispatch}
-                    actions={actions}
-                    showNumber={showNumber}
-                    tableData={tableData}
-                    onIgnoreColumnChanged={onIgnoreColumnChanged}
-                />
-                <div className="overflow-x-auto relative shadow-md sm:rounded-lg dark:scrollbar-thumb-gray-900">
-                    {tableLoading && (
-                        <div
-                            className={
-                                'absolute w-full h-full bg-[rgba(0,0,0,.5)] text-center flex items-center justify-center'
-                            }>
-                            <CircularProgress
-                                size={30}
-                                color={'primary'}
-                                className={'z-50'}
-                            />
-                        </div>
-                    )}
-                    <div>
-                        <table
-                            id={'table-to-xls'}
-                            className={`w-full text-sm ${
-                                direction === 'ltr' ? 'text-left' : 'text-right'
-                            } text-gray-500 dark:text-gray-400`}>
-                            <TableHead
-                                lang={lang}
-                                showNumber={showNumber}
-                                columns={columns}
-                                actions={actions}
-                                data={data}
-                                dispatch={dispatch}
-                                setTableLoading={setTableLoading}
-                                datatableRoute={datatableRoute}
-                                translate={translate}
-                                shouldIShowTheColumn={shouldIShowTheColumn}
-                            />
-                            <TableBody
-                                handleEditAction={handleEditAction}
-                                actions={actions}
-                                showNumber={showNumber}
-                                columns={columns}
-                                editAction={editAction}
-                                deleteAction={deleteAction}
-                                data={tableData}
-                                setTableLoading={setTableLoading}
-                                deleteRole={deleteRole}
-                                editRole={editRole}
-                                otherActions={otherOptions}
-                                datatableRoute={datatableRoute}
-                                objectName={objectName}
-                                lang={lang}
-                                deleteRoute={deleteRoute}
-                                translate={translate}
-                                shouldIShowTheColumn={shouldIShowTheColumn}
-                            />
-                        </table>
+            <div className="overflow-x-auto relative shadow-md sm:rounded-lg dark:scrollbar-thumb-gray-900">
+                {tableLoading && (
+                    <div
+                        className={
+                            'absolute w-full h-full bg-[rgba(0,0,0,.5)] text-center flex items-center justify-center'
+                        }>
+                        <CircularProgress
+                            size={30}
+                            color={'primary'}
+                            className={'z-50'}
+                        />
                     </div>
+                )}
+                <div className={'mt-5'}>
+                    <DatatableActions
+                        translate={translate}
+                        columns={columns}
+                        data={data}
+                        dispatch={dispatch}
+                        actions={actions}
+                        showNumber={showNumber}
+                        tableData={tableData}
+                    />
+                    <table
+                        id={'table-to-xls'}
+                        className={`w-full text-sm ${
+                            direction === 'ltr' ? 'text-left' : 'text-right'
+                        } text-gray-500 dark:text-gray-400`}>
+                        <TableHead
+                            lang={lang}
+                            showNumber={showNumber}
+                            columns={columns}
+                            actions={actions}
+                            data={data}
+                            dispatch={dispatch}
+                            setTableLoading={setTableLoading}
+                            datatableRoute={datatableRoute}
+                            translate={translate}
+                            shouldIShowTheColumn={shouldIShowTheColumn}
+                        />
+                        <TableBody
+                            handleEditAction={handleEditAction}
+                            actions={actions}
+                            showNumber={showNumber}
+                            columns={columns}
+                            editAction={editAction}
+                            deleteAction={deleteAction}
+                            data={tableData}
+                            setTableLoading={setTableLoading}
+                            deleteRole={deleteRole}
+                            editRole={editRole}
+                            otherActions={otherOptions}
+                            datatableRoute={datatableRoute}
+                            objectName={objectName}
+                            lang={lang}
+                            deleteRoute={deleteRoute}
+                            translate={translate}
+                            shouldIShowTheColumn={shouldIShowTheColumn}
+                        />
+                    </table>
                 </div>
-                <div className={'mt-4'}>
-                    <div className={'flex items-center justify-between'}>
-                        <div>
-                            <Pagination
-                                page={data?.page}
-                                onChange={handlePageChange}
-                                count={totalPage}
-                                color="primary"
-                            />
-                        </div>
-                        <div>
-                            {tableData?.from} - {tableData.to} of{' '}
-                            {Math.abs(tableData?.total).toLocaleString()}
-                        </div>
+            </div>
+            <div className={'mt-4'}>
+                <div className={'flex items-center justify-between'}>
+                    <div>
+                        <Pagination
+                            page={data?.page}
+                            onChange={handlePageChange}
+                            count={totalPage}
+                            color="primary"
+                        />
+                    </div>
+                    <div>
+                        {fromResource ? (
+                            <div>
+                                {tableData?.meta?.from} - {tableData.meta.to} of{' '}
+                                {tableData?.meta.total}
+                            </div>
+                        ) : (
+                            <div>
+                                {tableData?.from} - {tableData.to} of{' '}
+                                {tableData?.total}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

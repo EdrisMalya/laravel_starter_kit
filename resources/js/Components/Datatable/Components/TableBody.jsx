@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, IconButton, Tooltip } from "@mui/material"
+import { IconButton, Tooltip } from '@mui/material'
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 import dayjs from 'dayjs'
 import swal from 'sweetalert'
@@ -24,8 +24,6 @@ const TableBody = ({
     translate,
     shouldIShowTheColumn
 }) => {
-    const [redMore, setRedMore] = React.useState(null)
-
     let counter = 1
     const resolve = (path, obj) => {
         return path.split('.').reduce(function (prev, curr) {
@@ -37,14 +35,6 @@ const TableBody = ({
             typeof column?.data_type === 'undefined'
                 ? 'string'
                 : column?.data_type
-        if(typeof column?.limit !== 'undefined'){
-            return (
-                <span>
-                    {resolve(column.key, item).substring(0, column?.limit)+'...'}<br />
-                    <span className={'text-blue-600 cursor-pointer'} onClick={()=>setRedMore(resolve(column.key, item))}>{translate('Red more')}</span>
-                </span>
-            )
-        }
         if (typeof data_type !== 'undefined') {
             switch (data_type) {
                 case 'string':
@@ -70,8 +60,6 @@ const TableBody = ({
                             ? 'Inactive'
                             : column?.false_value
                     return resolve(column.key, item) ? trueValue : falseValue
-                case 'price':
-                    return Math.abs(resolve(column.key, item)).toLocaleString()
             }
         }
     }
@@ -139,7 +127,7 @@ const TableBody = ({
                         )}
                         {columns?.map(column => (
                             shouldIShowTheColumn(column.key) && (
-                                <td key={column?.key} className={`py-2 px-6 text-xs whitespace-nowrap ${column?.className}`}>
+                                <td key={column?.key} className="py-2 px-6 text-xs">
                                     {tdDataBuilder(column, item)}
                                 </td>
                             )
@@ -191,18 +179,6 @@ const TableBody = ({
                     </tr>
                 ))
             )}
-        <Dialog open={redMore!==null}>
-            <DialogContent>
-                <DialogContentText>
-                    {redMore}
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={()=>setRedMore(null)} variant={'outlined'} >
-                    {translate('Close')}
-                </Button>
-            </DialogActions>
-        </Dialog>
         </tbody>
     )
 }

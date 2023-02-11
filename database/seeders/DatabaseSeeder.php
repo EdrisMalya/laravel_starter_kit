@@ -37,5 +37,7 @@ class DatabaseSeeder extends Seeder
         $this->call(LoginLogsTableSeeder::class);
         $this->call(PublicWebsitesTableSeeder::class);
         $this->call(WidgetsTableSeeder::class);
+        $this->call(WebsocketsStatisticsEntriesTableSeeder::class);
+        $this->call(ProductsTableSeeder::class);
     }
 }

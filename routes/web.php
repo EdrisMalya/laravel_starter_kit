@@ -41,6 +41,9 @@ Route::group(['prefix'=>'{lang}'], function(){
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
             Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+            /**************************************** Product Controller ********************************/
+            Route::resource('product', \App\Http\Controllers\ProductController::class);
+
             /*************************************** User management routes ****************************************/
             Route::group(['prefix' => 'user/management'], function (){
                 Route::get('/', function(){
@@ -65,6 +68,7 @@ Route::group(['prefix'=>'{lang}'], function(){
                 /*************************************** Permission routes ************************************/
                 Route::resource('permissions', \App\Http\Controllers\UserManagement\PermissionsController::class);
                 Route::post('save/permission', [\App\Http\Controllers\UserManagement\PermissionsController::class, 'savePermission'])->name('save-permission');
+                Route::post('update/permission/sort', [\App\Http\Controllers\UserManagement\PermissionsController::class, 'updatePermissionSort'])->name('update.permission.sort');
                 Route::delete('delete/permission/{permission}', [\App\Http\Controllers\UserManagement\PermissionsController::class, 'deletePermission'])->name('delete-permission');
 
 
