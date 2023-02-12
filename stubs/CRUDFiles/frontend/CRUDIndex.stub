@@ -29,8 +29,8 @@ const {{ModelClassName}}Index = ({ {{modal_small_name}}s }) => {
                 <Datatable
                     editRole={'{{modal_small_name}}-edit-{{modal_small_name}}'}
                     deleteRole={'{{modal_small_name}}-delete-project'}
-                    data=
-                    {{{modal_small_name}}s}
+                    fromResource={true}
+                    data={{{modal_small_name}}s}
                     handleEditAction={{{modal_small_name}} => {
                         set{{ModelClassName}}({{modal_small_name}})
                         setShowForm(true)
