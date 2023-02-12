@@ -4,9 +4,22 @@ import ConfigurationPageLinks from '@/Pages/Configuration/ConfigurationPageLinks
 import useLanguage from '@/hooks/useLanguage'
 import { Chip } from '@mui/material'
 import { fileSize } from '@/helper'
+import { Inertia } from '@inertiajs/inertia'
 
 const BackupIndex = ({ active, lang, backups }) => {
     const { translate } = useLanguage()
+
+    React.useEffect(() => {
+        window.Echo.private('backupFinishedChannel').listen(
+            'BackupFinishedEvent',
+            e => {
+                Inertia.visit(route(route().current(), { ...route().params }), {
+                    only: ['backups'],
+                })
+            },
+        )
+    }, [])
+
     return (
         <Authenticated
             navBarOptions={

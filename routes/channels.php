@@ -19,3 +19,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 Broadcast::channel('testchannel', function ($user) {
     return true;
 });
+
+Broadcast::channel('backupFinishedChannel', function ($user) {
+    return true;
+});
