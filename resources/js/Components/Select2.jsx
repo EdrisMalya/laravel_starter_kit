@@ -159,7 +159,7 @@ const Select2 = ({
 
     return (
         <div className={`${className}`}>
-            {data && (
+            {data ? (
                 <div>
                     {isMulti &&
                         selectAllOption &&
@@ -226,6 +226,10 @@ const Select2 = ({
                         )}
                     />
                     {isMulti && selectAllOption && checkBox()}
+                </div>
+            ) : (
+                <div className={'text-center'}>
+                    <CircularProgress size={30} />
                 </div>
             )}
         </div>
