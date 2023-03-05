@@ -10,25 +10,29 @@ use Inertia\Inertia;
 
 class LoginLogController extends Controller
 {
-    public function index($lang, Request $request){
+    public function index($lang, Request $request)
+    {
         $this->allowed('login-log-access');
         $logs = LoginLog::query();
-        if($request->has('date')){
+        if ($request->has('date')) {
             $logs = $logs->whereDate('created_at', $request->get('date'));
         }
         $datatable = new DatatableBuilder($logs, $request, ['email', 'ip_address']);
+
         return Inertia::render('UserManagement/LoginLogIndex', [
             'active' => 'login_logs',
             'logs' => $datatable->build(),
-            'filter_date' => $request->get('date')
+            'filter_date' => $request->get('date'),
         ]);
     }
 
-    public function destroy($lang, $login_log){
+    public function destroy($lang, $login_log)
+    {
         $this->allowed('login-log-truncate');
         LoginLog::query()->truncate();
         activity()->useLog('Login log')
             ->log('truncated');
-        return back()->with(['message'=>translate('Deleted successfully'), 'type'=>'success']);
+
+        return back()->with(['message' => translate('Deleted successfully'), 'type' => 'success']);
     }
 }

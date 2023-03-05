@@ -12,15 +12,17 @@ use Inertia\Inertia;
 
 class PermissionsController extends Controller
 {
-
-    public function checkPermission(){
-        if(auth()->id() !=1){
+    public function checkPermission()
+    {
+        if (auth()->id() != 1) {
             abort(403);
         }
     }
 
-    public function index(){
+    public function index()
+    {
         $this->checkPermission();
+
         return Inertia::render('UserManagement/Permissions/PermissionIndex', [
             'active' => 'permission',
             'permissions' => PermissionGroup::query()
@@ -28,79 +30,97 @@ class PermissionsController extends Controller
                 ->with('permissionGroup.permissions')
                 ->with('permissions')
                 ->orderBy('sort')
-                ->get()
+                ->get(),
         ]);
     }
-    public function store(Request $request){
+
+    public function store(Request $request)
+    {
         $this->checkPermission();
         $data = $request->validate([
-            'name' => ['required', function($field, $value, $error) use ($request){
-                if(
+            'name' => ['required', function ($field, $value, $error) use ($request) {
+                if (
                     PermissionGroup::query()
                         ->where('name', $value)
                         ->where('permission_group_id', $request->get('permission_group_id'))
                         ->exists()
-                ) $error('This name already exists');
+                ) {
+                    $error('This name already exists');
+                }
             }],
             'permission_group_id' => 'sometimes',
         ]);
         $max_sort = PermissionGroup::query()->where('permission_group_id', $data['permission_group_id'])->max('sort');
-        if(PermissionGroup::query()->where('permission_group_id', $data['permission_group_id'])->count() > 0){
-            $max_sort = $max_sort+1;
-        }else{
-            $max_sort = $max_sort > 0 ? $max_sort+1:$max_sort;
+        if (PermissionGroup::query()->where('permission_group_id', $data['permission_group_id'])->count() > 0) {
+            $max_sort = $max_sort + 1;
+        } else {
+            $max_sort = $max_sort > 0 ? $max_sort + 1 : $max_sort;
         }
-        $data['sort'] = $max_sort == null?0:$max_sort;
+        $data['sort'] = $max_sort == null ? 0 : $max_sort;
         PermissionGroup::create($data);
-        return back()->with(['message'=>translate('Group created successfully'), 'type'=>'success']);
-    }
-    public function destroy($lang, $permissionGroup){
-        $this->checkPermission();
-        $permissionGroup = PermissionGroup::query()->findOrFail($permissionGroup);
-        if($permissionGroup->permissionGroup->count() > 0 || $permissionGroup->permissions->count() > 0){
-            return back()->with(['message'=>translate('Group cannot be deleted because child groups exists'), 'type'=>'error']);
-        }
-        $permissionGroup->delete();
-        return back()->with(['message'=>translate('Group deleted successfully')]);
+
+        return back()->with(['message' => translate('Group created successfully'), 'type' => 'success']);
     }
 
-    public function update($lang, $permissionGroup, Request $request){
+    public function destroy($lang, $permissionGroup)
+    {
+        $this->checkPermission();
+        $permissionGroup = PermissionGroup::query()->findOrFail($permissionGroup);
+        if ($permissionGroup->permissionGroup->count() > 0 || $permissionGroup->permissions->count() > 0) {
+            return back()->with(['message' => translate('Group cannot be deleted because child groups exists'), 'type' => 'error']);
+        }
+        $permissionGroup->delete();
+
+        return back()->with(['message' => translate('Group deleted successfully')]);
+    }
+
+    public function update($lang, $permissionGroup, Request $request)
+    {
         $this->checkPermission();
         $data = $request->validate([
             'name' => 'required',
         ]);
         PermissionGroup::findOrFail($permissionGroup)->update($data);
-        return back()->with(['message'=>translate('Group updated successfully'), 'type' => 'success']);
+
+        return back()->with(['message' => translate('Group updated successfully'), 'type' => 'success']);
     }
 
-    public function savePermission(Request $request){
+    public function savePermission(Request $request)
+    {
         $this->checkPermission();
         $data = $request->validate([
-            'name' => ['required', function($field, $value, $error) use ($request){
-                if(
+            'name' => ['required', function ($field, $value, $error) use ($request) {
+                if (
                     Permission::query()->where('name', $value)
                         ->where('permission_group_id', $request->get('permission_group_id'))
                         ->exists()
-                ) $error('Name already exists');
+                ) {
+                    $error('Name already exists');
+                }
             }],
-            'permission_group_id' =>'required',
+            'permission_group_id' => 'required',
         ]);
         $category = PermissionGroup::findOrFail($data['permission_group_id']);
         $data['key'] = Str::slug($category->name.'-'.$data['name']);
         Permission::create($data);
-        return back()->with(['message'=>translate('Permission created successfully'), 'type' => 'success']);
+
+        return back()->with(['message' => translate('Permission created successfully'), 'type' => 'success']);
     }
 
-    public function deletePermission($lang, Permission $permission){
+    public function deletePermission($lang, Permission $permission)
+    {
         $this->checkPermission();
-        if(RolePermission::query()->where('permission_id', $permission->id)->exists()){
-            return back()->with(['message'=>translate('This permission cannot be deleted because its attached to some roles'), 'type'=> 'error']);
-        }else{
+        if (RolePermission::query()->where('permission_id', $permission->id)->exists()) {
+            return back()->with(['message' => translate('This permission cannot be deleted because its attached to some roles'), 'type' => 'error']);
+        } else {
             $permission->delete();
-            return back()->with(['message'=>translate('Permission created successfully'), 'type' => 'success']);
+
+            return back()->with(['message' => translate('Permission created successfully'), 'type' => 'success']);
         }
     }
-    public function updatePermissionSort($lang, Request $request){
+
+    public function updatePermissionSort($lang, Request $request)
+    {
         /*dd([
             'parent' => (int)$request->get('parent_id'),
             'removedIndex' => (int)$request->get('removedIndex'),
@@ -126,17 +146,17 @@ class PermissionsController extends Controller
             ->where('sort', (int)$request->get('addedIndex'))->first());*/
         $first = PermissionGroup::query()
             ->where('permission_group_id', $request->get('parent_id'))
-            ->where('sort', (int)$request->get('addedIndex'))
+            ->where('sort', (int) $request->get('addedIndex'))
             ->first();
         $second = PermissionGroup::query()
             ->where('permission_group_id', $request->get('parent_id'))
-            ->where('sort', (int)$request->get('removedIndex'))
+            ->where('sort', (int) $request->get('removedIndex'))
             ->first();
         $first->update([
-            'sort' => (int)$request->get('removedIndex')
+            'sort' => (int) $request->get('removedIndex'),
         ]);
         $second->update([
-            'sort' => (int)$request->get('addedIndex')
+            'sort' => (int) $request->get('addedIndex'),
         ]);
 
         return back()->with(['message' => translate('Sort updated'), 'type' => 'success']);

@@ -70,6 +70,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'check_user' => CheckUserStatusAndPasswordChangeMiddleware::class,
         'lang' => LanguageMiddleware::class,
-        'public_website' => PublicWebsiteMiddleware::class
+        'public_website' => PublicWebsiteMiddleware::class,
     ];
 }

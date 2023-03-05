@@ -11,7 +11,8 @@ class UserRole extends Model
 
     protected $guarded = [];
 
-    public function role() {
+    public function role()
+    {
         return $this->belongsTo(Role::class);
     }
 }

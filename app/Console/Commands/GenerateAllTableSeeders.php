@@ -4,8 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class GenerateAllTableSeeders extends Command
 {
@@ -32,15 +30,15 @@ class GenerateAllTableSeeders extends Command
     {
         $this->info('Retrieving all tables');
         $files = [];
-        foreach (\Illuminate\Support\Facades\File::allFiles(base_path('database/migrations')) as $file){
+        foreach (\Illuminate\Support\Facades\File::allFiles(base_path('database/migrations')) as $file) {
             $files[] = $file->getFilename();
         }
         $file_names = [];
-        foreach ($files as $file){
+        foreach ($files as $file) {
             $file_array = explode('_create_', $file);
-            if(count($file_array) > 1){
+            if (count($file_array) > 1) {
                 $file_name = explode('_table.php', $file_array[1]);
-                if(!in_array($file_name[0], ['activity_log', 'login_logs'])){
+                if (! in_array($file_name[0], ['activity_log', 'login_logs'])) {
                     $file_names[] = $file_name[0];
                 }
             }
@@ -50,6 +48,7 @@ class GenerateAllTableSeeders extends Command
         $this->info('Seeding started');
         Artisan::call('iseed '.$tables.' --force');
         $this->info('Seeding finished successfully');
+
         return Command::SUCCESS;
     }
 }

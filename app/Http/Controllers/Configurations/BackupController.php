@@ -14,18 +14,19 @@ class BackupController extends Controller
         $this->allowed('backups-access');
         $files = storage_path('app/backups');
         try {
-            $backups = collect(File::allFiles($files))->map(function($file){
+            $backups = collect(File::allFiles($files))->map(function ($file) {
                 return [
                     'file_name' => $file->getFileName(),
-                    'file_size' => $file->getSize()
+                    'file_size' => $file->getSize(),
                 ];
             })->toArray();
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $backups = [];
         }
+
         return Inertia::render('Configuration/Backup/BackupIndex', [
             'active' => 'backup',
-            'backups' => $backups
+            'backups' => $backups,
         ]);
     }
 }

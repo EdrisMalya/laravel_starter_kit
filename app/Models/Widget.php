@@ -15,13 +15,12 @@ class Widget extends Model
     protected $guarded = [];
 
     public function getActivitylogOptions(): LogOptions
-        {
-            return LogOptions::defaults()
-                            ->logOnlyDirty()
-                            ->logOnly(['*'])
-                            ->useLogName('Widgets')
-                            ->dontSubmitEmptyLogs()
-                            ->dontLogIfAttributesChangedOnly(['updated_at'])
-                            ;
-        }
+    {
+        return LogOptions::defaults()
+                        ->logOnlyDirty()
+                        ->logOnly(['*'])
+                        ->useLogName('Widgets')
+                        ->dontSubmitEmptyLogs()
+                        ->dontLogIfAttributesChangedOnly(['updated_at']);
+    }
 }

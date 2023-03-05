@@ -21,8 +21,7 @@ class PermissionGroup extends Model
             ->logOnly(['*'])
             ->useLogName('Permission group')
             ->dontSubmitEmptyLogs()
-            ->dontLogIfAttributesChangedOnly(['updated_at'])
-            ;
+            ->dontLogIfAttributesChangedOnly(['updated_at']);
     }
 
     public function permissionGroup()

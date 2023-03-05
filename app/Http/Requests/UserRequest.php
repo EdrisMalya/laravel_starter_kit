@@ -25,7 +25,7 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
-        if($this->user){
+        if ($this->user) {
             return [
                 'name' => ['required', 'string', 'min:3', 'max:255'],
                 'last_name' => ['required', 'string', 'min:3', 'max:255'],
@@ -35,10 +35,9 @@ class UserRequest extends FormRequest
                 'confirm_password' => ['nullable', 'same:password'],
                 'image' => ['nullable', 'file', 'image', 'max:5000'],
                 'roles' => ['required'],
-                'status' => ['required', 'boolean']
+                'status' => ['required', 'boolean'],
             ];
-
-        }else{
+        } else {
             return [
                 'name' => ['required', 'string', 'min:3', 'max:255'],
                 'last_name' => ['required', 'string', 'min:3', 'max:255'],
@@ -47,9 +46,8 @@ class UserRequest extends FormRequest
                 'password' => ['required', Password::default()],
                 'confirm_password' => ['required', 'same:password'],
                 'image' => ['required', 'file', 'image', 'max:5000'],
-                'roles' => ['required']
+                'roles' => ['required'],
             ];
-
         }
     }
 }

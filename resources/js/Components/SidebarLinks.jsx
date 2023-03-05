@@ -5,7 +5,7 @@ import { HomeIcon } from '@heroicons/react/24/solid'
 import ProtectedComponent from '@/Components/ProtectedComponent'
 import { usePage } from '@inertiajs/inertia-react'
 import useLanguage from '@/hooks/useLanguage'
-import { ViewColumn } from '@mui/icons-material'
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon'
 
 const SidebarLinks = ({ active }) => {
     const { lang, dir } = usePage().props

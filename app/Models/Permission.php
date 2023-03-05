@@ -21,8 +21,6 @@ class Permission extends Model
             ->logOnly(['*'])
             ->useLogName('Permission')
             ->dontSubmitEmptyLogs()
-            ->dontLogIfAttributesChangedOnly(['updated_at'])
-            ;
+            ->dontLogIfAttributesChangedOnly(['updated_at']);
     }
-
 }

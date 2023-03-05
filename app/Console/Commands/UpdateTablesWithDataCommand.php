@@ -29,6 +29,7 @@ class UpdateTablesWithDataCommand extends Command
     {
         $this->call('generate:seed');
         $this->call('migrate:fresh --seed');
+
         return Command::SUCCESS;
     }
 }

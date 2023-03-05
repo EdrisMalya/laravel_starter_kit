@@ -21,20 +21,24 @@ class Role extends Model
             ->logOnly(['*'])
             ->useLogName('Role')
             ->dontSubmitEmptyLogs()
-            ->dontLogIfAttributesChangedOnly(['updated_at'])
-            ;
+            ->dontLogIfAttributesChangedOnly(['updated_at']);
     }
 
-    public function created_by(){
+    public function created_by()
+    {
         return $this->belongsTo(User::class, 'created_by', 'id');
     }
-    public function updated_by(){
+
+    public function updated_by()
+    {
         return $this->belongsTo(User::class, 'updated_by', 'id');
     }
 
-    public function permissions(){
+    public function permissions()
+    {
         return $this->hasMany(RolePermission::class);
     }
+
     public function assignedRoles()
     {
         return $this->hasMany(RolePermission::class)->select('permission_id');

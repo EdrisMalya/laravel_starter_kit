@@ -24,8 +24,7 @@ class User extends Authenticatable
             ->logOnly(['*'])
             ->useLogName('Users')
             ->dontSubmitEmptyLogs()
-            ->dontLogIfAttributesChangedOnly(['updated_at','password','remember_token'])
-            ;
+            ->dontLogIfAttributesChangedOnly(['updated_at', 'password', 'remember_token']);
     }
 
     protected $guarded = [];
@@ -36,7 +35,7 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'permissions'
+        'permissions',
     ];
 
     protected $casts = [
@@ -45,8 +44,9 @@ class User extends Authenticatable
         'change_password' => 'boolean',
     ];
 
-    public static function deleteUserImage($user){
-        if(File::exists(public_path('storage/'.$user->image))){
+    public static function deleteUserImage($user)
+    {
+        if (File::exists(public_path('storage/'.$user->image))) {
             File::delete(public_path('storage/'.$user->image));
         }
         UserRole::where('user_id', $user->id)->delete();
@@ -55,12 +55,13 @@ class User extends Authenticatable
     public static function boot()
     {
         parent::boot();
-        static::deleted(function($user){
+        static::deleted(function ($user) {
             static::deleteUserImage($user);
         });
     }
 
-    public function roles(){
+    public function roles()
+    {
         return $this->hasMany(UserRole::class)->with('role');
     }
 
@@ -98,27 +99,27 @@ class User extends Authenticatable
         $permissions = auth()->user()->load(['roles.role']);
         $permission_ids = $permissions->roles->pluck('role.assignedRoles')->flatten()->pluck('permission_id')->unique()->toArray();
 
-        return Cache::remember('permission_keys_'.auth()->user()->id, 60*24*30, function() use ($permission_ids) {
-            return Permission::whereIn('id', $permission_ids)->select('key')->get()->map(function($item) {
+        return Cache::remember('permission_keys_'.auth()->user()->id, 60 * 24 * 30, function () use ($permission_ids) {
+            return Permission::whereIn('id', $permission_ids)->select('key')->get()->map(function ($item) {
                 return $item->key;
             });
         });
     }
 
-    public static function isAllowed($permission, $abort=true)
+    public static function isAllowed($permission, $abort = true)
     {
         $request = request();
-        if ($request->user()->id == 1){
+        if ($request->user()->id == 1) {
             return true;
         }
         $result = in_array($permission, static::getPermissionsAttribute()->toArray());
-        if (!$result){
-            if ($abort){
+        if (! $result) {
+            if ($abort) {
                 abort(403);
-            }else{
+            } else {
                 return false;
             }
-        }else{
+        } else {
             return true;
         }
     }

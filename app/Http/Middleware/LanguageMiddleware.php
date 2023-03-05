@@ -3,10 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\Http\Controllers\Configurations\LanguageController;
-use App\Models\Language;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 
 class LanguageMiddleware
 {
@@ -19,16 +17,16 @@ class LanguageMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if($request->lang == 'eng'){
+        if ($request->lang == 'eng') {
             return $next($request);
-        }else{
+        } else {
             $languages_abbreviations = LanguageController::getAllLanguages();
-            $abbrs = collect($languages_abbreviations)->map(function($lang){
+            $abbrs = collect($languages_abbreviations)->map(function ($lang) {
                 return $lang->abbr;
             })->toArray();
-            if(in_array($request->lang, $abbrs)){
+            if (in_array($request->lang, $abbrs)) {
                 return $next($request);
-            }else{
+            } else {
                 abort(404);
             }
         }

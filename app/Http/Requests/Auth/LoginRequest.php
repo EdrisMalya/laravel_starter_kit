@@ -52,7 +52,7 @@ class LoginRequest extends FormRequest
                 'email' => $this->email,
                 'ip_address' => $this->ip(),
                 'status' => false,
-                'action_type' => 'login'
+                'action_type' => 'login',
             ]);
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
@@ -62,7 +62,7 @@ class LoginRequest extends FormRequest
             'email' => $this->email,
             'ip_address' => $this->ip(),
             'status' => true,
-            'action_type' => 'login'
+            'action_type' => 'login',
         ]);
 
         RateLimiter::clear($this->throttleKey());

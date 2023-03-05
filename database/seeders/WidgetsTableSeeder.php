@@ -6,7 +6,6 @@ use Illuminate\Database\Seeder;
 
 class WidgetsTableSeeder extends Seeder
 {
-
     /**
      * Auto generated seed file
      *
@@ -14,13 +13,10 @@ class WidgetsTableSeeder extends Seeder
      */
     public function run()
     {
-        
-
         \DB::table('widgets')->delete();
-        
-        \DB::table('widgets')->insert(array (
-            0 => 
-            array (
+
+        \DB::table('widgets')->insert([
+            0 => [
                 'id' => 3,
                 'name' => 'Important points about us',
                 'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -28,9 +24,7 @@ class WidgetsTableSeeder extends Seeder
 </svg>',
                 'created_at' => '2022-12-29 13:03:23',
                 'updated_at' => '2022-12-29 13:03:23',
-            ),
-        ));
-        
-        
+            ],
+        ]);
     }
 }

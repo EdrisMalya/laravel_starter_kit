@@ -21,11 +21,11 @@ class RoleGroup extends Model
             ->logOnly(['*'])
             ->useLogName('Role group')
             ->dontSubmitEmptyLogs()
-            ->dontLogIfAttributesChangedOnly(['updated_at'])
-            ;
+            ->dontLogIfAttributesChangedOnly(['updated_at']);
     }
 
-    public function roles(){
+    public function roles()
+    {
         return $this->hasMany(Role::class);
     }
 }

@@ -212,7 +212,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
-        'TPDF' => Elibyy\TCPDF\Facades\TCPDF::class
+        'TPDF' => Elibyy\TCPDF\Facades\TCPDF::class,
     ])->toArray(),
 
 ];

@@ -6,7 +6,6 @@ use App\Models\Permission;
 use App\Models\PermissionGroup;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
@@ -20,17 +19,17 @@ class CRUDCommand extends Command
     {
         $has_image = false;
         $with_image = $this->ask('With image?N');
-        if($with_image && $with_image == 'Y'){
+        if ($with_image && $with_image == 'Y') {
             $has_image = true;
         }
-        $model_name = ucfirst(strtolower($this->argument('model')));
+        $model_name = ucfirst($this->argument('model'));
         $model_table_name = strtolower(Str::plural($model_name));
         $web_routes_file = base_path('routes/web.php');
         $sidebar_links = base_path('resources/js/Components/SidebarLinks.jsx');
         $web_routes_file_string = File::get($web_routes_file);
         $sidebar_links_string = File::get($sidebar_links);
 
-        if(File::exists(base_path('/app/Models/'.$model_name.'.php'))){
+        if (File::exists(base_path('/app/Models/'.$model_name.'.php'))) {
             $table_columns = Schema::getColumnListing($model_table_name);
             unset($table_columns['updated_at']);
             $view_folder = base_path('resources/js/Pages/'.$model_name);
@@ -48,14 +47,14 @@ class CRUDCommand extends Command
             $crud_backend_request_stub = base_path('stubs/CRUDFiles/backend/CRUDRequest.stub');
             $crud_backend_resource_stub = base_path('stubs/CRUDFiles/backend/CRUDResource.stub');
 
-            if(
-                !File::isDirectory($view_folder) &&
-                !File::exists($model_controller) &&
-                !File::exists($model_request) &&
-                !File::exists($model_resource) &&
-                !File::exists($view_index) &&
-                !File::exists($view_form)
-            ){
+            if (
+                ! File::isDirectory($view_folder) &&
+                ! File::exists($model_controller) &&
+                ! File::exists($model_request) &&
+                ! File::exists($model_resource) &&
+                ! File::exists($view_index) &&
+                ! File::exists($view_form)
+            ) {
                 $crud_frontend_index_stub_string = File::get($crud_frontend_index_stub);
                 $crud_frontend_form_stub_string = File::get($crud_frontend_form_stub);
 
@@ -70,48 +69,47 @@ class CRUDCommand extends Command
                 $searches_array = '';
                 $resource_array = '';
                 $request_array = '';
-                foreach ($table_columns as $column){
-                    if(!in_array($column, $ignore_columns)){
-                        if($has_image){
+                foreach ($table_columns as $column) {
+                    if (! in_array($column, $ignore_columns)) {
+                        if ($has_image) {
                             $datatable_fields .=
                                 "
                         {
-                            name: translate('".str_replace('_',' ', ucfirst($column))."'),
+                            name: translate('".str_replace('_', ' ', ucfirst($column))."'),
                             key: '{$column}',
                             sort: true,{{}}
                         },";
-                            if($column == 'created_at'){
+                            if ($column == 'created_at') {
                                 $datatable_fields = str_replace('{{}}',
                                     "data_type: 'date',
                             format: 'YYYY-MM-DD hh:mm A'",
                                     $datatable_fields
                                 );
-                            }else{
+                            } else {
                                 $datatable_fields = str_replace('{{}}', '', $datatable_fields);
                             }
-                        }else{
-                            if($column != 'image'){
+                        } else {
+                            if ($column != 'image') {
                                 $datatable_fields .=
                                     "
                         {
-                            name: translate('".str_replace('_',' ', ucfirst($column))."'),
+                            name: translate('".str_replace('_', ' ', ucfirst($column))."'),
                             key: '{$column}',
                             sort: true,{{}}
                         },";
-                                if($column == 'created_at'){
+                                if ($column == 'created_at') {
                                     $datatable_fields = str_replace('{{}}',
                                         "data_type: 'date',
                             format: 'YYYY-MM-DD hh:mm A'",
                                         $datatable_fields
                                     );
-                                }else{
+                                } else {
                                     $datatable_fields = str_replace('{{}}', '', $datatable_fields);
                                 }
                             }
                         }
-
                     }
-                    if(!in_array($column, ['id', 'created_at', 'updated_at', 'image', 'photo', 'picture'])){
+                    if (! in_array($column, ['id', 'created_at', 'updated_at', 'image', 'photo', 'picture'])) {
                         $model_form .= "
                         <TextField
                             onChange={handleChange}
@@ -124,39 +122,39 @@ class CRUDCommand extends Command
                             required={true}
                         />";
                     }
-                    if(!in_array($column, ['id', 'created_at', 'updated_at'])){
-                        $model_form_field .= "
-        ".$column.": ".strtolower($model_name)."?.{$column},";
+                    if (! in_array($column, ['id', 'created_at', 'updated_at'])) {
+                        $model_form_field .= '
+        '.$column.': '.strtolower($model_name)."?.{$column},";
                         $searches_array .= "'{$column}', ";
-                        if($column == 'image' && $has_image){
+                        if ($column == 'image' && $has_image) {
                             $request_array = "
             '{$column}' => ['required', 'file', 'image', 'max:5000'],";
-                        }else{
+                        } else {
                             $request_array .= "
             '${column}' => ['required', 'string', 'min:1', 'max:150'],";
                         }
                     }
-                    if($has_image){
-                        if($column == 'id'){
+                    if ($has_image) {
+                        if ($column == 'id') {
                             $resource_array = "
             'id' => encrypt(\$this->id),";
-                        }else{
+                        } else {
                             $resource_array .= "
             '{$column}' => \$this->{$column},";
                         }
-                    }else{
-                        if($column != 'image'){
-                            if($column == 'id'){
+                    } else {
+                        if ($column != 'image') {
+                            if ($column == 'id') {
                                 $resource_array = "
             'id' => encrypt(\$this->id),";
-                            }else{
+                            } else {
                                 $resource_array .= "
             '{$column}' => \$this->{$column},";
                             }
                         }
                     }
                 }
-                $searches = array(
+                $searches = [
                     '{{ModelClassName}}',
                     '{{modal_small_name}}',
                     '{{model_fields}}',
@@ -166,35 +164,35 @@ class CRUDCommand extends Command
                     '{{resource_array}}',
                     '{{request_array}}',
                     '/**** Other routes ****/',
-                    '{/*Other links*/}'
-                );
-                $replaces = array(
+                    '{/*Other links*/}',
+                ];
+                $replaces = [
                     $model_name,
                     strtolower($model_name),
                     $datatable_fields,
-                    $model_form_field ,
+                    $model_form_field,
                     $model_form,
                     $searches_array,
                     $resource_array,
                     $request_array,
                     "
             /***************************** {$model_name} Routes ****************************/
-            Route::resource('".strtolower($model_name)."', \App\Http\Controllers\\".$model_name."Controller::class);
+            Route::resource('".strtolower($model_name)."', \App\Http\Controllers\\".$model_name.'Controller::class);
 
-            /**** Other routes ****/",
+            /**** Other routes ****/',
                     "
             <ProtectedComponent role={'".strtolower($model_name)."-access'}>
                 <SidebarLinkButton
                     dir={dir}
-                    icon={<ViewColumn className={'h-5'} />}
+                    icon={<InsertEmoticonIcon className={'h-5'} />}
                     url={route('".strtolower($model_name).".index', { lang })}
                     label={translate('".$model_name."')}
                     active={active === '".strtolower($model_name)."'}
                 />
             </ProtectedComponent>
             {/*Other links*/}
-                    "
-                );
+                    ",
+                ];
 
                 $crud_frontend_index_stub_string = str_replace(
                     $searches,
@@ -251,7 +249,7 @@ class CRUDCommand extends Command
                 $permissionGroup = PermissionGroup::query()->create([
                     'name' => $model_name,
                     'permission_group_id' => 0,
-                    'sort' => $sort
+                    'sort' => $sort,
                 ]);
 
                 Permission::query()->create([
@@ -276,7 +274,7 @@ class CRUDCommand extends Command
                 ]);
 
                 $this->info('Crud generated successfully');
-            }else{
+            } else {
                 File::deleteDirectory($view_folder);
                 File::delete($model_controller);
                 File::delete($model_request);
@@ -289,9 +287,10 @@ class CRUDCommand extends Command
 
                 $this->error('Model exits');
             }
-        }else{
+        } else {
             $this->error('File not found');
         }
+
         return Command::SUCCESS;
     }
 }

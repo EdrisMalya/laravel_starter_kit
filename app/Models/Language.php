@@ -21,11 +21,11 @@ class Language extends Model
             ->logOnly(['*'])
             ->useLogName('Language')
             ->dontSubmitEmptyLogs()
-            ->dontLogIfAttributesChangedOnly(['updated_at'])
-            ;
+            ->dontLogIfAttributesChangedOnly(['updated_at']);
     }
 
-    public function words(){
+    public function words()
+    {
         return $this->hasMany(LanguageDictionary::class);
     }
 }

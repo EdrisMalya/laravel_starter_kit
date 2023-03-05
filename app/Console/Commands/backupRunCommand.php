@@ -31,6 +31,7 @@ class backupRunCommand extends Command
     {
         Artisan::call('backup:run');
         event(new BackupFinishedEvent('backup finished'));
+
         return Command::SUCCESS;
     }
 }
